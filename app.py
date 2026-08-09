@@ -15,6 +15,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Google Search Console Meta Tag Integrated
 st.markdown('<meta name="google-site-verification" content="O8FzJ2HI4_XeHf3nD061ujpOB2aWw3kpaTI6BSCh3PA" />', unsafe_allow_html=True)
 
 # --- Custom Styling (SaaS Look) ---
