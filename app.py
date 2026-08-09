@@ -6,7 +6,6 @@ import tempfile
 import asyncio
 import edge_tts
 from deep_translator import GoogleTranslator
-import time
 
 # --- Page Configuration ---
 st.set_page_config(
@@ -46,7 +45,7 @@ st.markdown("""
         backdrop-filter: blur(10px);
     }
     </style>
-""", unsafe_allow_html=unsafe_allow_html)
+""", unsafe_allow_html=True)
 
 # --- Sidebar (Monetization & Plans) ---
 with st.sidebar:
@@ -64,7 +63,7 @@ with st.sidebar:
     """)
     if st.button("🚀 Unlock Pro Plan ($9/mo)"):
         st.balloons()
-        st.info("Monetization Link / Payment Gateway (Stripe/Razorpay) integration ready!")
+        st.info("Monetization Link / Payment Gateway integration ready!")
 
     st.divider()
     st.caption("© 2026 TranslateAI Inc. All rights reserved.")
