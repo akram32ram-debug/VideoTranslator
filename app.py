@@ -9,7 +9,7 @@ from deep_translator import GoogleTranslator
 
 # --- Page Configuration ---
 st.set_page_config(
-    page_title="TranslateAI Pro - Next-Gen Video Translator",
+    page_title="TranslateAI Pro - Multi-Language Dubbing",
     page_icon="🎬",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -47,61 +47,58 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- Sidebar (Monetization & Plans) ---
+# --- Sidebar ---
 with st.sidebar:
     st.image("https://img.icons8.com/3d-fluency/94/video-interpreter.png", width=70)
     st.title("TranslateAI Pro")
-    st.caption("AI-Powered Video Dubbing")
+    st.caption("Perfect Multi-Language Dubbing")
     st.divider()
-    
-    st.subheader("👑 Upgrade to Pro")
-    st.markdown("""
-    - ⚡ **10x Faster Translation**
-    - 💎 **Unlimited Video Length**
-    - 🎙️ **Natural Voice Cloning**
-    - 🎥 **4K Video Export**
-    """)
-    if st.button("🚀 Unlock Pro Plan ($9/mo)"):
-        st.balloons()
-        st.info("Monetization Link / Payment Gateway integration ready!")
-
+    st.success("✅ Upgraded to High-Accuracy AI Model")
     st.divider()
-    st.caption("© 2026 TranslateAI Inc. All rights reserved.")
+    st.caption("© 2026 TranslateAI Inc.")
 
 # --- Header ---
-st.title("🎬 AI Video Translator & Dubbing Engine")
-st.markdown("##### Upload your Hindi video, and our AI will automatically transcribe, translate, and dub it into natural English voice!")
-
+st.title("🎬 Global AI Video Dubbing Engine")
+st.markdown("##### Upload your video and perfectly dub it into any language worldwide!")
 st.write("")
 
-# --- Model Loading ---
+# --- Language & Voice Settings ---
+SUPPORTED_LANGUAGES = {
+    "English (US)": {"code": "en", "voice": "en-US-AriaNeural"},
+    "English (UK)": {"code": "en", "voice": "en-GB-SoniaNeural"},
+    "Spanish (Spain)": {"code": "es", "voice": "es-ES-ElviraNeural"},
+    "French (France)": {"code": "fr", "voice": "fr-FR-DeniseNeural"},
+    "German (Germany)": {"code": "de", "voice": "de-DE-AmalaNeural"},
+    "Japanese (Japan)": {"code": "ja", "voice": "ja-JP-NanamiNeural"},
+    "Arabic (Saudi)": {"code": "ar", "voice": "ar-SA-ZariyahNeural"},
+    "Hindi (India)": {"code": "hi", "voice": "hi-IN-SwaraNeural"}
+}
+
+# --- Model Loading (Upgraded to 'base' for better accuracy) ---
 @st.cache_resource
 def load_model():
-    return whisper.load_model("tiny")
+    # 'tiny' की जगह 'base' कर दिया है ताकि वो शब्दों को बिल्कुल सही सुने
+    return whisper.load_model("base")
 
-async def generate_english_tts(text, output_audio_path, voice_name="en-US-AriaNeural"):
+async def generate_tts(text, output_audio_path, voice_name):
     communicate = edge_tts.Communicate(text, voice_name)
     await communicate.save(output_audio_path)
 
-# --- App Layout (Two Columns) ---
+# --- App Layout ---
 col1, col2 = st.columns([1, 1], gap="large")
 
 with col1:
     st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-    st.subheader("📥 1. Upload Video Source")
+    st.subheader("📥 1. Upload & Setup")
     uploaded_file = st.file_uploader("Choose an MP4 File", type=["mp4", "mov"])
     
-    selected_voice = st.selectbox(
-        "🎙️ Choose English Voice:",
-        ["Aria (Female - US)", "Guy (Male - US)", "Sonia (Female - UK)", "Ryan (Male - UK)"]
+    # 🌍 नया फीचर: भाषा चुनने का ऑप्शन
+    selected_language = st.selectbox(
+        "🌍 Choose Dubbing Language:",
+        list(SUPPORTED_LANGUAGES.keys())
     )
-    voice_codes = {
-        "Aria (Female - US)": "en-US-AriaNeural",
-        "Guy (Male - US)": "en-US-GuyNeural",
-        "Sonia (Female - UK)": "en-GB-SoniaNeural",
-        "Ryan (Male - UK)": "en-GB-RyanNeural"
-    }
-
+    
+    st.info("💡 Note: हमने ट्रांसलेशन परफेक्ट करने के लिए हाई-क्वालिटी AI इस्तेमाल किया है, इसलिए प्रोसेसिंग में 1-2 मिनट लग सकते हैं।")
     st.markdown("</div>", unsafe_allow_html=True)
 
 with col2:
@@ -111,68 +108,70 @@ with col2:
     if uploaded_file is not None:
         st.video(uploaded_file)
         
-        if st.button("✨ Auto Translate & Dub Video"):
+        if st.button("✨ Start Perfect Dubbing"):
             progress_bar = st.progress(0)
             status_text = st.empty()
             
             try:
-                # Setup Temp Files
                 with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as temp_video:
                     temp_video.write(uploaded_file.read())
                     video_path = temp_video.name
 
                 audio_path = "temp_audio.wav"
-                new_audio_path = "new_english_audio.mp3"
-                output_video_path = "final_translated_video.mp4"
+                new_audio_path = "new_dubbed_audio.mp3"
+                output_video_path = "final_dubbed_video.mp4"
 
                 # Step 1: Extract Audio
-                status_text.text("⚙️ Step 1/4: Extracting Audio Track...")
-                progress_bar.progress(25)
+                status_text.text("⚙️ Step 1/4: Extracting Audio...")
+                progress_bar.progress(20)
                 video = mp.VideoFileClip(video_path)
                 video.audio.write_audiofile(audio_path, logger=None)
 
-                # Step 2: Speech to Text (Whisper AI)
-                status_text.text("🧠 Step 2/4: Transcribing Hindi Audio with AI...")
-                progress_bar.progress(50)
+                # Step 2: High-Accuracy Transcription
+                status_text.text("🧠 Step 2/4: Accurately Listening to Audio (Whisper Base)...")
+                progress_bar.progress(45)
                 model = load_model()
                 result = model.transcribe(audio_path, fp16=False)
-                hindi_text = result.get("text", "")
+                original_text = result.get("text", "")
 
-                # Step 3: Translate Text
-                status_text.text("🌐 Step 3/4: Translating to Natural English...")
-                progress_bar.progress(75)
-                translator = GoogleTranslator(source='auto', target='en')
-                english_text = translator.translate(hindi_text)
+                # Step 3: Perfect Translation
+                status_text.text(f"🌐 Step 3/4: Translating to {selected_language}...")
+                progress_bar.progress(70)
+                target_code = SUPPORTED_LANGUAGES[selected_language]["code"]
+                target_voice = SUPPORTED_LANGUAGES[selected_language]["voice"]
+                
+                translator = GoogleTranslator(source='auto', target=target_code)
+                translated_text = translator.translate(original_text)
 
-                # Step 4: Generate Voice & Merge Video
-                status_text.text("🎙️ Step 4/4: Generating AI Voice & Rendering Video...")
+                # Step 4: Voice Generation & Merging
+                status_text.text("🎙️ Step 4/4: Generating Studio Voice & Rendering...")
                 progress_bar.progress(90)
                 
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
-                loop.run_until_complete(generate_english_tts(english_text, new_audio_path, voice_codes[selected_voice]))
+                loop.run_until_complete(generate_tts(translated_text, new_audio_path, target_voice))
 
                 new_audio = mp.AudioFileClip(new_audio_path)
                 final_video = video.set_audio(new_audio)
                 final_video.write_videofile(output_video_path, codec="libx264", audio_codec="aac", logger=None)
 
                 progress_bar.progress(100)
-                status_text.text("✅ Dubbing Completed Successfully!")
-                st.success("🎉 Your translated video is ready!")
+                status_text.text("✅ Perfect Dubbing Completed!")
+                st.success("🎉 Your professional video is ready!")
 
-                # Final Video Output & Download
+                # Play & Download
                 st.video(output_video_path)
                 with open(output_video_path, "rb") as file:
                     st.download_button(
-                        label="📥 Download Translated Video (HD)",
+                        label=f"📥 Download {selected_language} Video",
                         data=file,
-                        file_name="dubbed_video.mp4",
+                        file_name=f"dubbed_{target_code}.mp4",
                         mime="video/mp4"
                     )
 
             except Exception as e:
                 st.error(f"Execution Error: {e}")
     else:
-        st.info("👆 Please upload an MP4 video from the left panel to begin translation.")
+        st.info("👆 Please upload an MP4 video from the left panel.")
         
     st.markdown("</div>", unsafe_allow_html=True)
