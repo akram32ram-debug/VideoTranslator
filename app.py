@@ -9,6 +9,10 @@ from deep_translator import GoogleTranslator
 
 # --- Page Configuration ---
 st.set_page_config(
+    import streamlit as st
+
+# Google Search Console Verification Meta Tag
+st.markdown('<meta name="google-site-verification" content="YHAAN_APNA_WALA_CODE_YAHAN_PASTE_KAREIN" />', unsafe_allow_html=True)
     page_title="TranslateAI Pro - Multi-Language Dubbing",
     page_icon="🎬",
     layout="wide",
