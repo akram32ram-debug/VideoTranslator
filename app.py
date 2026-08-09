@@ -15,8 +15,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Yahan apna Google Search Console wala meta tag daal sakte hain (Optional)
-# st.markdown('<meta name="google-site-verification" content="APKA_CODE_YAHAN_HOGA" />', unsafe_allow_html=True)
+st.markdown('<meta name="google-site-verification" content="YAHAN_APNA_NAYA_CODE_PASTE_KAREIN" />', unsafe_allow_html=True)
 
 # --- Custom Styling (SaaS Look) ---
 st.markdown("""
