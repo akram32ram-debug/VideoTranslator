@@ -7,17 +7,16 @@ import asyncio
 import edge_tts
 from deep_translator import GoogleTranslator
 
-# --- Page Configuration ---
+# --- Page Configuration & Google Search Console Verification ---
 st.set_page_config(
-    import streamlit as st
-
-# Google Search Console Verification Meta Tag
-st.markdown('<meta name="google-site-verification" content="YHAAN_APNA_WALA_CODE_YAHAN_PASTE_KAREIN" />', unsafe_allow_html=True)
     page_title="TranslateAI Pro - Multi-Language Dubbing",
     page_icon="🎬",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Yahan apna Google Search Console wala meta tag daal sakte hain (Optional)
+# st.markdown('<meta name="google-site-verification" content="APKA_CODE_YAHAN_HOGA" />', unsafe_allow_html=True)
 
 # --- Custom Styling (SaaS Look) ---
 st.markdown("""
@@ -57,7 +56,7 @@ with st.sidebar:
     st.title("TranslateAI Pro")
     st.caption("Perfect Multi-Language Dubbing")
     st.divider()
-    st.success("✅ Upgraded to High-Accuracy AI Model")
+    st.success("✅ SEO Verified & Active")
     st.divider()
     st.caption("© 2026 TranslateAI Inc.")
 
@@ -78,10 +77,9 @@ SUPPORTED_LANGUAGES = {
     "Hindi (India)": {"code": "hi", "voice": "hi-IN-SwaraNeural"}
 }
 
-# --- Model Loading (Upgraded to 'base' for better accuracy) ---
+# --- Model Loading ---
 @st.cache_resource
 def load_model():
-    # 'tiny' की जगह 'base' कर दिया है ताकि वो शब्दों को बिल्कुल सही सुने
     return whisper.load_model("base")
 
 async def generate_tts(text, output_audio_path, voice_name):
@@ -96,13 +94,12 @@ with col1:
     st.subheader("📥 1. Upload & Setup")
     uploaded_file = st.file_uploader("Choose an MP4 File", type=["mp4", "mov"])
     
-    # 🌍 नया फीचर: भाषा चुनने का ऑप्शन
     selected_language = st.selectbox(
         "🌍 Choose Dubbing Language:",
         list(SUPPORTED_LANGUAGES.keys())
     )
     
-    st.info("💡 Note: हमने ट्रांसलेशन परफेक्ट करने के लिए हाई-क्वालिटी AI इस्तेमाल किया है, इसलिए प्रोसेसिंग में 1-2 मिनट लग सकते हैं।")
+    st.info("💡 Note: AI वीडियो की आवाज़ सुनकर उसे चुनिंदा भाषा में डब करेगा।")
     st.markdown("</div>", unsafe_allow_html=True)
 
 with col2:
@@ -131,14 +128,14 @@ with col2:
                 video = mp.VideoFileClip(video_path)
                 video.audio.write_audiofile(audio_path, logger=None)
 
-                # Step 2: High-Accuracy Transcription
-                status_text.text("🧠 Step 2/4: Accurately Listening to Audio (Whisper Base)...")
+                # Step 2: Transcription
+                status_text.text("🧠 Step 2/4: Listening to Audio (Whisper)...")
                 progress_bar.progress(45)
                 model = load_model()
                 result = model.transcribe(audio_path, fp16=False)
                 original_text = result.get("text", "")
 
-                # Step 3: Perfect Translation
+                # Step 3: Translation
                 status_text.text(f"🌐 Step 3/4: Translating to {selected_language}...")
                 progress_bar.progress(70)
                 target_code = SUPPORTED_LANGUAGES[selected_language]["code"]
@@ -148,7 +145,7 @@ with col2:
                 translated_text = translator.translate(original_text)
 
                 # Step 4: Voice Generation & Merging
-                status_text.text("🎙️ Step 4/4: Generating Studio Voice & Rendering...")
+                status_text.text("🎙️ Step 4/4: Generating AI Voice & Rendering...")
                 progress_bar.progress(90)
                 
                 loop = asyncio.new_event_loop()
